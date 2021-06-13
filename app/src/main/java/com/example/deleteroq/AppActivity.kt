@@ -33,6 +33,8 @@ import androidx.core.content.ContextCompat.getSystemService
 import android.app.ActivityManager
 import android.content.Context
 import androidx.core.content.ContextCompat
+import androidx.room.Room
+import com.example.deleteroq.data.TaskDatabase
 
 
 class DeleterOqActivity : ComponentActivity() {
@@ -42,9 +44,8 @@ class DeleterOqActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        taskViewModel.addTask(Task("./kek/",228))
-        taskViewModel.addTask(Task("./lawda.wd/",25))
-        taskViewModel.addTask(Task("./keesatask/",7))
+        val db = Room.databaseBuilder(this, TaskDatabase::class.java, "tasks").allowMainThreadQueries().build()
+        taskViewModel.init(db)
 
         Deleter.run("/storage/emulated/0/Download",1)
 

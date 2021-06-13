@@ -4,6 +4,7 @@ buildscript {
         compose_version = '1.0.0-beta08'
         activity_compose_version = '1.3.0-beta01'
         viewmodel_compose_version = '1.0.0-alpha06'
+        room_version = "2.3.0"
     }
     repositories {
         google()
