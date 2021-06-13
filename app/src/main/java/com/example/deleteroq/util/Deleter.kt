@@ -14,12 +14,14 @@ class Deleter {
                 val n = 60*60*24*day
 
                 dir.listFiles()?.forEach {
-                    val attr = Files.getFileAttributeView(Paths.get(it.path), BasicFileAttributeView::class.java).readAttributes()
+                    if (!it.isDirectory) {
+                        val attr = Files.getFileAttributeView(Paths.get(it.path), BasicFileAttributeView::class.java).readAttributes()
 
-                    val createTime = attr.creationTime().toMillis()/1000
+                        val createTime = attr.creationTime().toMillis()/1000
 
-                    if (currentTime - createTime > n) {
-                        it.delete()
+                        if (currentTime - createTime > n) {
+                            it.delete()
+                        }
                     }
                 }
             }
