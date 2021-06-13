@@ -1,5 +1,6 @@
 package com.example.deleteroq
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,6 +27,13 @@ import androidx.compose.ui.unit.dp
 import com.example.deleteroq.model.Task
 import com.example.deleteroq.model.TaskViewModel
 import com.example.deleteroq.ui.theme.DeleterOqTheme
+import com.example.deleteroq.util.Deleter
+import androidx.core.content.ContextCompat.getSystemService
+
+import android.app.ActivityManager
+import android.content.Context
+import androidx.core.content.ContextCompat
+
 
 class DeleterOqActivity : ComponentActivity() {
 
@@ -38,6 +46,8 @@ class DeleterOqActivity : ComponentActivity() {
         taskViewModel.addTask(Task("./lawda.wd/",25))
         taskViewModel.addTask(Task("./keesatask/",7))
 
+        Deleter.run("/storage/emulated/0/Download",1)
+
         setContent {
             DeleterOqTheme {
                 Scaffold(
@@ -47,13 +57,22 @@ class DeleterOqActivity : ComponentActivity() {
                                 Text(text = "DeleterOq")
                             },
                             actions = {
-                                var isPlay by remember { mutableStateOf(false) }
+                                var isPlay by remember { mutableStateOf( (this@DeleterOqActivity).isMyServiceRunning(DeleterOqService::class.java) ) }
                                 IconButton(onClick = { isPlay = !isPlay }) {
                                     Icon(
                                         if (isPlay) Icons.Filled.Close else Icons.Filled.PlayArrow,
                                         contentDescription = null
                                     )
                                 }
+
+                                Intent(this@DeleterOqActivity, DeleterOqService::class.java).also { indent ->
+                                    if (isPlay) {
+                                        startService(indent)
+                                    } else {
+                                        stopService(indent)
+                                    }
+                                }
+
                                 var isDialogEdit by remember { mutableStateOf(false) }
                                 DialogEdit(
                                     isDialogEdit,
@@ -83,4 +102,11 @@ class DeleterOqActivity : ComponentActivity() {
             }
         }
     }
+
+    fun Context.isMyServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager = this.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        return manager.getRunningServices(Integer.MAX_VALUE)
+            .any { it.service.className == serviceClass.name }
+    }
 }
+
