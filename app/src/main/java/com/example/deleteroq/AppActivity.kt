@@ -1,5 +1,6 @@
 package com.example.deleteroq
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -32,6 +33,8 @@ import androidx.core.content.ContextCompat.getSystemService
 
 import android.app.ActivityManager
 import android.content.Context
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.room.Room
 import com.example.deleteroq.data.TaskDatabase
@@ -43,6 +46,15 @@ class DeleterOqActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ){
+            val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
+            ActivityCompat.requestPermissions(this, permissions,0)
+        }
 
         val db = Room.databaseBuilder(this, TaskDatabase::class.java, "tasks").allowMainThreadQueries().build()
         taskViewModel.init(db)
