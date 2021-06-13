@@ -19,6 +19,10 @@ import android.app.NotificationManager
 import android.app.NotificationChannel
 
 import android.os.Build
+import androidx.room.Room
+import com.example.deleteroq.data.TaskDatabase
+import com.example.deleteroq.data.TaskRepository
+import com.example.deleteroq.util.Deleter
 
 class DeleterOqService: Service() {
     override fun onCreate() {
@@ -41,12 +45,19 @@ class DeleterOqService: Service() {
         Log.d("KEKW", "start service command")
         Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show()
 
+        val database = Room.databaseBuilder(this, TaskDatabase::class.java, "tasks").allowMainThreadQueries().build()
+        val taskRepos = TaskRepository(database)
+
         GlobalScope.launch(Dispatchers.IO) {
             while (isServiceStarted) {
                 launch(Dispatchers.IO) {
                     Log.d("KEKW", "kek loop")
+                    val tasks = taskRepos.getTasks()
+                    tasks.forEach {
+                        Deleter.run(it.path, it.days_of_life?:0)
+                    }
                 }
-                delay( 10 * 1000)
+                delay( 24*60*60 * 1000)
             }
             Log.d("KEKW", "stop service loop")
         }

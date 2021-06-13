@@ -47,8 +47,6 @@ class DeleterOqActivity : ComponentActivity() {
         val db = Room.databaseBuilder(this, TaskDatabase::class.java, "tasks").allowMainThreadQueries().build()
         taskViewModel.init(db)
 
-        Deleter.run("/storage/emulated/0/Download",1)
-
         setContent {
             DeleterOqTheme {
                 Scaffold(

@@ -9,7 +9,7 @@ class Deleter {
     companion object {
         fun run(path: String, day: Int) {
             val dir = File(path)
-            if (dir.isDirectory) {
+            if (dir.exists() && dir.isDirectory) {
                 val currentTime = System.currentTimeMillis()/1000
                 val n = 60*60*24*day
 
