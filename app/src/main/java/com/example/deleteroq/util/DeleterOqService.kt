@@ -1,5 +1,6 @@
 package com.example.deleteroq
 
+import android.app.Notification
 import android.app.Service
 import android.content.ComponentName
 import android.content.Context
@@ -11,10 +12,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import androidx.core.app.NotificationCompat
+
+import android.app.NotificationManager
+
+import android.app.NotificationChannel
+
+import android.os.Build
 
 class DeleterOqService: Service() {
     override fun onCreate() {
         Log.d("KEKW", "start service")
+
+        val notification: Notification = NotificationCompat.Builder(this, "")
+            .setContentTitle("")
+            .setContentText("").build()
+        startForeground(2, notification)
     }
 
     override fun onDestroy() {

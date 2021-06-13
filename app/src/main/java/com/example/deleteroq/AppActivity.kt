@@ -67,7 +67,7 @@ class DeleterOqActivity : ComponentActivity() {
 
                                 Intent(this@DeleterOqActivity, DeleterOqService::class.java).also { indent ->
                                     if (isPlay) {
-                                        startService(indent)
+                                        startForegroundService(indent)
                                     } else {
                                         stopService(indent)
                                     }
